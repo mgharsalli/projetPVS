@@ -1,0 +1,318 @@
+%%%
+%%% Google Drive Project, ENSEIRB-MATMECA
+%%% Team 5 - 2012/2013 : Fabien CHERET, Pauline GALVAO, Alexia MENAND, Camille MIZONY, Elian ORIOU
+%%% Project URL : http://code.google.com/p/pvs-google-documents/
+%%% ENSEIRB-MATMECA Advisor : Paul-Yves Gloess
+%%%
+%%% Created 13 December 2012
+%%% Last update 23 January 2013
+%%%
+%%% =============================
+%%%   Modification History 
+%%% =============================
+%%% - January 23, 2013  : Replacing coherency guards by the (coherent?) google 
+%%%                       database subtype.
+%%% - January 22, 2013  : Finishing coherency checking, adding cartesian 
+%%%                       product proof and operator lifting theory. Moreover, 
+%%%                       we added an example theory.
+%%% - January 21, 2013  : Homogenization of comments and coherency checking.
+%%% - January 17, 2013  : Finish implementing principal function.
+%%% - January 16, 2013  : Adding new actions and there guards (functions rename,
+%%%                       dragAndDrop and organize are not finished yet).
+%%% - January 15, 2013  : Consider some remarks from Paul-Yves Gloess.
+%%% - January 10, 2013  : Add set operation. Finally the organize action is 
+%%%   	      	  	  used by both action add and remove as base action.
+%%% - January 09, 2013  : After some comments, some changes has been done.
+%%% - December 20, 2012 : Movin to record data type.
+%%% - December 12, 2012 : Creation of the data model.
+%%% 
+
+googleDocs[User: TYPE]: THEORY
+
+  BEGIN
+    IMPORTING Object
+
+    %% Avoid ambiguity on edit? and view? functions
+    CONVERSION- singleton_elt
+   
+    %% =============================================================
+    %% Declaration of the google database type which describes the
+    %% state of the "Google World"
+    %% =============================================================
+    googleDatabase: TYPE
+      = [#         url: nat,
+                 view?: [Object, User -> bool], 
+                 edit?: [Object, User -> bool],
+              comment?: [(Document?), User -> bool], 
+                owner?: [Object, User -> bool],
+            belongsTo?: [Object, (Collection?) -> bool] #]
+
+    %% =============================================================
+    %% Predicates definition
+    %% =============================================================
+
+    %%
+    %% Check google database object coherency
+    %%
+    coherent?(sigma: googleDatabase)
+      : bool
+      = subset?(owner?(sigma), edit?(sigma))
+        AND subset?(edit?(sigma), view?(sigma))
+
+    %% 
+    %% Users having view access rights on the object o with 
+    %% respect to the Google Database sigma
+    %%
+    view?(o: Object)
+         (sigma: (coherent?))
+      : [User -> bool]
+      = (LAMBDA(u: User): sigma`view?(o, u))
+
+    IMPORTING setsPlus[(Collection?), User]
+
+    %%  
+    %% Users having view access rights on at least one collection
+    %% into the list cs with respect to the Google Database sigma
+    %%
+    view?(cs: [(Collection?) -> bool])
+         (sigma: (coherent?))
+      : [User -> bool]
+      = union(cs, (LAMBDA(c: (Collection?)): view?(c)(sigma)))
+
+    %% 
+    %% Users having edit access rights on the object o with 
+    %% respect to the Google Database sigma
+    %%
+    edit?(o: Object)
+         (sigma: (coherent?))
+      : [User -> bool]
+      = (LAMBDA(u: User): (sigma`edit?)(o, u))
+
+    %%
+    %% Check if the if the user u have edit access rights on 
+    %% each collection into the collection list cs
+    %%
+    edit?(cs: [(Collection?) -> bool], u: User)
+         (sigma: (coherent?))
+      : bool
+      = (FORALL (c: (cs)): (sigma`edit?)(c, u))
+
+    %%  
+    %% Users having edit access rights on at least one collection
+    %% into the list cs with respect to the Google Database sigma
+    %%
+    edit?(cs: [(Collection?) -> bool])
+         (sigma: (coherent?))
+      : [User -> bool]
+      = union(cs, (LAMBDA(c: (Collection?)): edit?(c)(sigma)))
+
+    %% 
+    %% Collections containing the object o with respect to the
+    %% Google Database sigma
+    %%
+    belongsTo?(o: Object)
+              (sigma: (coherent?))
+      : [(Collection?) -> bool]
+      = (LAMBDA(c: (Collection?)): sigma`belongsTo?(o, c))
+
+
+    %% =============================================================
+    %% Guards Definitions
+    %% =============================================================
+
+    collectionContentManagement?(u: User, o: Object, c: (Collection?))
+                                (sigma: (coherent?))
+      : bool
+      = sigma`edit?(c, u) AND sigma`view?(o, u)
+
+    %% =============================================================
+    %% Actions definition (each transforms the google drive state)
+    %% Function transformation in a precise point
+    %% =============================================================
+
+    %%
+    %% Google Docs Action : User u creating an object with respect to 
+    %% the Google Database sigma
+    %%
+    createDocument(u: User)
+                  (sigma: (coherent?))
+      : (coherent?)
+      = LET doc = document(sigma`url, "Untitled document")
+         IN sigma WITH [     `url := sigma`url + 1,
+                          `owner? := sigma`owner? WITH [(doc, u) := TRUE],
+                           `edit? := sigma`edit? WITH [(doc, u) := TRUE],
+                        `comment? := sigma`comment? WITH [(doc, u) := TRUE],
+                           `view? := sigma`view? WITH [(doc, u) := TRUE]]
+
+    %%
+    %% Google Docs Action : User u creating an collection named with the string s with
+    %% respect to the Google Database sigma
+    %%  
+    createCollection(u: User, s: string)
+                    (sigma: (coherent?))
+      : (coherent?)
+      = LET col = collection(sigma`url, s)
+         IN sigma WITH [   `url := sigma`url + 1,
+                        `owner? := sigma`owner? WITH [(col, u) := TRUE],
+                         `edit? := sigma`edit? WITH [(col, u) := TRUE],
+                         `view? := sigma`view? WITH [(col, u) := TRUE]]
+
+    %%
+    %% Renaming an object o identified by the given url with the string newName
+    %% with respect to the Google Database sigma
+    %%
+    rename(newName: string, url: nat)
+          (o: Object)
+      : Object
+      = IF url = url(o) 
+         THEN CASES o OF 
+                document(u, name): document(u, newName),
+                collection(u, name): collection(u, newName)
+              ENDCASES
+         ELSE o
+        ENDIF
+
+    %%
+    %% Google Docs Action : User u renaming an object o with the string s
+    %% with respect to the Google Database sigma
+    %%
+    rename(u: User, o: Object, s: string)
+          (sigma: ({sigma: (coherent?) | edit?(sigma)(o, u)}))
+      : (coherent?)
+      = sigma WITH [  `owner? := image((LAMBDA(obj: Object, u: User): 
+                                          (rename(s, url(o))(obj), u)),
+                                       sigma`owner?),
+                       `edit? := image((LAMBDA(obj: Object, u: User): 
+                                          (rename(s, url(o))(obj), u)),
+                                       sigma`edit?),
+                    `comment? := image((LAMBDA(doc: (Document?), u: User): 
+                                          (rename(s, url(o))(doc), u)),
+                                       sigma`comment?),
+                       `view? := image((LAMBDA(obj: Object, u: User): 
+                                          (rename(s, url(o))(obj), u)),
+                                       sigma`view?),
+                  `belongsTo? := image((LAMBDA(obj: Object, c: (Collection?)): 
+                                          (rename(s, url(o))(obj), rename(s, url(o))(c))),
+                                       sigma`belongsTo?)]
+
+    %% Imported from the Picture Team 4 2012-2013    
+    IMPORTING cartesian_product[Object, User]
+    IMPORTING cartesian_product[Object, (Collection?)]
+  
+    %%
+    %% Google Docs Action : User u adding object o to collections plus_cs and 
+    %% removing it from minus_cs
+    %% 
+    organize(u: User, o: Object, minus_cs: [(Collection?) -> bool], plus_cs: [(Collection?) -> bool])
+            (sigma: ({sigma: (coherent?) | edit?(plus_cs, u)(sigma)
+                                           AND edit?(minus_cs, u)(sigma) AND view?(sigma)(o, u)}))
+      : (coherent?)
+      = sigma WITH [     `view? := union(difference(view?(sigma), 
+                                                    singleton(o) * view?(minus_cs)(sigma)), 
+                                         singleton(o) * view?(plus_cs)(sigma)),
+                         `edit? := union(difference(edit?(sigma), 
+                                                    singleton(o) * edit?(minus_cs)(sigma)),
+                                         singleton(o) * edit?(plus_cs)(sigma)),
+                    `belongsTo? := union(difference(belongsTo?(sigma), 
+                                                    singleton(o) * minus_cs), 
+                                         singleton(o) * plus_cs)]	  
+
+    %%
+    %% Google Docs Action : User u adding an object o to a collection c
+    %%   
+    addTo(u: User, o: Object, c: (Collection?))
+         (sigma: ({sigma: (coherent?) | collectionContentManagement?(u, o, c)(sigma)}))
+      : (coherent?)
+      = organize(u, o, emptyset, singleton(c))(sigma)
+   
+    %%
+    %% Google Docs Action : User u removing an object o from a collection c
+    %%  
+    removeFrom(u: User, o: Object, c: (Collection?))
+              (sigma: ({sigma: (coherent?) | collectionContentManagement?(u, o, c)(sigma)}))
+      : (coherent?)
+      = organize(u, o, singleton(c), emptyset)(sigma)
+
+    %%
+    %% Google Docs Action : User u dragging object o from the collection cFrom
+    %% and dropping it into the collection cTo
+    %%
+    dragAndDrop(u: User, o: Object, cFrom: (Collection?), cTo: (Collection?))
+               (sigma: (coherent?))
+      : (coherent?)
+      = organize(u, o, singleton(cFrom), singleton(cTo))(sigma)
+
+    %%
+    %% Google Docs Action : User u sets view access to an object o for another user 
+    %% u2 (share settings)
+    %%  
+    setView(u: User, o: Object, u2: User)
+           (sigma: ({sigma: googleDatabase | coherent?(sigma) AND edit?(sigma)(o, u)}))
+      : (coherent?)
+      = sigma WITH [`view? := sigma`view? WITH [(o, u2) := TRUE]]
+      		    
+    %%
+    %% Google Docs Action : User u sets edit access to an object o for another 
+    %% user u2 (share settings)
+    %%
+    setEdit(u: User, o: Object, u2: User)
+           (sigma: ({sigma: (coherent?) | edit?(sigma)(o, u)}))
+      : (coherent?)
+      = sigma WITH [`edit? := sigma`edit? WITH [(o, u2) := TRUE]]
+
+    %%
+    %% Google Docs Action : User u sets comment permission to a document d for
+    %% another user u2 (share settings)
+    %%  
+    setComment(u: User, d: (Document?), u2: User)
+              (sigma: ({sigma: (coherent?) | edit?(sigma)(d, u)}))
+      : (coherent?)
+      = sigma WITH [`comment? := sigma`comment? WITH [(d, u2) := TRUE]]
+
+    %%
+    %% Google Docs Action : User u assigning ownership to a collection c for 
+    %% another User u2
+    %%  
+    setOwner(u: User, c: (Collection?), u2: User)
+            (sigma: ({sigma: (coherent?) | owner?(sigma)(c, u)}))
+      : (coherent?)
+      = sigma WITH [`owner? := sigma`owner? WITH [(c, u2) := TRUE] WITH [(c, u) := FALSE], 
+                     `edit? := sigma`edit? WITH [(c, u2) := TRUE],
+                     `view? := sigma`view? WITH [(c, u2) := TRUE]]
+
+    %%
+    %% Google Docs Action : User u assigning ownership to a document d for 
+    %% another User u2
+    %%  
+    setOwner(u: User, d: (Document?), u2: User)
+            (sigma: ({sigma: (coherent?) | owner?(sigma)(d, u)}))
+      : (coherent?)
+      = sigma WITH [   `owner? := sigma`owner? WITH [(d, u2) := TRUE] WITH [(d, u) := FALSE], 
+                        `edit? := sigma`edit? WITH [(d, u2) := TRUE],
+                     `comment? := sigma`comment? WITH [(d, u2) := TRUE],
+                        `view? := sigma`view? WITH [(d, u2) := TRUE]]
+
+    %%
+    %% Google Docs Action : User u removing ownership to a collection c for
+    %% another User u2
+    %%  
+    setNoAccess(u: User, c: (Collection?), u2: User)
+            (sigma: ({sigma: (coherent?) | edit?(sigma)(c, u) 
+                                           AND NOT owner?(sigma)(c, u2)}))
+      : (coherent?)
+      = sigma WITH [ `edit? := sigma`edit? WITH [(c, u2) := FALSE],
+                     `view? := sigma`view? WITH [(c, u2) := FALSE]]
+
+    %%
+    %% Google Docs Action : User u removing ownership to a document d for
+    %% another User u2
+    %%  
+    setNoAccess(u: User, d: (Document?), u2: User)
+            (sigma: ({sigma: (coherent?) | edit?(sigma)(d, u) 
+                                              AND NOT owner?(sigma)(d, u2)}))
+      : (coherent?)
+      = sigma WITH [    `edit? := sigma`edit? WITH [(d, u2) := FALSE],
+                     `comment? := sigma`comment? WITH [(d, u2) := FALSE],
+                        `view? := sigma`view? WITH [(d, u2) := FALSE]]
+
+  END googleDocs

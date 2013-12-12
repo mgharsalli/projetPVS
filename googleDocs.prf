@@ -1,0 +1,164 @@
+(googleDocs
+ (createDocument_TCC1 0
+  (createDocument_TCC1-1 nil 3567775890 ("" (subtype-tcc) nil nil)
+   ((boolean nonempty-type-decl nil booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (Object type-decl nil Object_adt nil)
+    (Collection? adt-recognizer-decl "[Object -> boolean]" Object_adt
+     nil)
+    (Document? adt-recognizer-decl "[Object -> boolean]" Object_adt
+     nil)
+    (User formal-type-decl nil googleDocs nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (googleDatabase type-eq-decl nil googleDocs nil)
+    (subset_is_partial_order name-judgement "(partial_order?[set[T]])"
+     sets_lemmas nil)
+    (list2finseq const-decl "finseq[T]" list2finseq nil)
+    (member const-decl "bool" sets nil)
+    (subset? const-decl "bool" sets nil)
+    (coherent? const-decl "bool" googleDocs nil))
+   nil))
+ (createCollection_TCC1 0
+  (createCollection_TCC1-1 nil 3567836059 ("" (subtype-tcc) nil nil)
+   ((boolean nonempty-type-decl nil booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (Object type-decl nil Object_adt nil)
+    (Collection? adt-recognizer-decl "[Object -> boolean]" Object_adt
+     nil)
+    (Document? adt-recognizer-decl "[Object -> boolean]" Object_adt
+     nil)
+    (User formal-type-decl nil googleDocs nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (googleDatabase type-eq-decl nil googleDocs nil)
+    (subset_is_partial_order name-judgement "(partial_order?[set[T]])"
+     sets_lemmas nil)
+    (member const-decl "bool" sets nil)
+    (subset? const-decl "bool" sets nil)
+    (coherent? const-decl "bool" googleDocs nil))
+   nil))
+ (rename_TCC1 0
+  (rename_TCC1-1 nil 3567836059 ("" (subtype-tcc) nil nil)
+   ((coherent? const-decl "bool" googleDocs nil)) nil))
+ (organize_TCC1 0
+  (organize_TCC1-1 nil 3567836059 ("" (subtype-tcc) nil nil)
+   ((coherent? const-decl "bool" googleDocs nil)) nil))
+ (addTo_TCC1 0
+  (addTo_TCC1-1 nil 3567399744 ("" (subtype-tcc) nil nil)
+   ((boolean nonempty-type-decl nil booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (Object type-decl nil Object_adt nil)
+    (Collection? adt-recognizer-decl "[Object -> boolean]" Object_adt
+     nil)
+    (Document? adt-recognizer-decl "[Object -> boolean]" Object_adt
+     nil)
+    (User formal-type-decl nil googleDocs nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (googleDatabase type-eq-decl nil googleDocs nil)
+    (coherent? const-decl "bool" googleDocs nil)
+    (collectionContentManagement? const-decl "bool" googleDocs nil)
+    (emptyset const-decl "set" sets nil)
+    (set type-eq-decl nil sets nil)
+    (finite_emptyset name-judgement "finite_set" finite_sets nil)
+    (singleton const-decl "(singleton?)" sets nil)
+    (singleton? const-decl "bool" sets nil)
+    (nonempty_singleton_finite application-judgement
+     "non_empty_finite_set[T]" googleDocs nil)
+    (nonempty_singleton_finite application-judgement
+     "non_empty_finite_set" finite_sets nil)
+    (subset? const-decl "bool" sets nil)
+    (member const-decl "bool" sets nil)
+    (subset_is_partial_order name-judgement "(partial_order?[set[T]])"
+     sets_lemmas nil)
+    (edit? const-decl "bool" googleDocs nil))
+   nil))
+ (removeFrom_TCC1 0
+  (removeFrom_TCC1-1 nil 3567399744 ("" (subtype-tcc) nil nil)
+   ((boolean nonempty-type-decl nil booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (Object type-decl nil Object_adt nil)
+    (Collection? adt-recognizer-decl "[Object -> boolean]" Object_adt
+     nil)
+    (Document? adt-recognizer-decl "[Object -> boolean]" Object_adt
+     nil)
+    (User formal-type-decl nil googleDocs nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (googleDatabase type-eq-decl nil googleDocs nil)
+    (coherent? const-decl "bool" googleDocs nil)
+    (collectionContentManagement? const-decl "bool" googleDocs nil)
+    (singleton const-decl "(singleton?)" sets nil)
+    (singleton? const-decl "bool" sets nil)
+    (set type-eq-decl nil sets nil)
+    (nonempty_singleton_finite application-judgement
+     "non_empty_finite_set[T]" googleDocs nil)
+    (nonempty_singleton_finite application-judgement
+     "non_empty_finite_set" finite_sets nil)
+    (emptyset const-decl "set" sets nil)
+    (finite_emptyset name-judgement "finite_set" finite_sets nil)
+    (subset? const-decl "bool" sets nil)
+    (member const-decl "bool" sets nil)
+    (subset_is_partial_order name-judgement "(partial_order?[set[T]])"
+     sets_lemmas nil)
+    (edit? const-decl "bool" googleDocs nil))
+   nil))
+ (dragAndDrop_TCC1 0
+  (dragAndDrop_TCC1-1 nil 3567775890 ("" (subtype-tcc) nil nil) nil
+   nil))
+ (setView_TCC1 0
+  (setView_TCC1-1 nil 3567836581 ("" (subtype-tcc) nil nil)
+   ((boolean nonempty-type-decl nil booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (Object type-decl nil Object_adt nil)
+    (Collection? adt-recognizer-decl "[Object -> boolean]" Object_adt
+     nil)
+    (Document? adt-recognizer-decl "[Object -> boolean]" Object_adt
+     nil)
+    (User formal-type-decl nil googleDocs nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (googleDatabase type-eq-decl nil googleDocs nil)
+    (AND const-decl "[bool, bool -> bool]" booleans nil)
+    (subset_is_partial_order name-judgement "(partial_order?[set[T]])"
+     sets_lemmas nil)
+    (member const-decl "bool" sets nil)
+    (subset? const-decl "bool" sets nil)
+    (coherent? const-decl "bool" googleDocs nil))
+   nil))
+ (setEdit_TCC1 0
+  (setEdit_TCC1-1 nil 3567836581 ("" (subtype-tcc) nil nil)
+   ((coherent? const-decl "bool" googleDocs nil)) nil))
+ (setComment_TCC1 0
+  (setComment_TCC1-1 nil 3567836581 ("" (subtype-tcc) nil nil)
+   ((boolean nonempty-type-decl nil booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (Object type-decl nil Object_adt nil)
+    (Document? adt-recognizer-decl "[Object -> boolean]" Object_adt
+     nil)
+    (Collection? adt-recognizer-decl "[Object -> boolean]" Object_adt
+     nil)
+    (User formal-type-decl nil googleDocs nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (googleDatabase type-eq-decl nil googleDocs nil)
+    (subset_is_partial_order name-judgement "(partial_order?[set[T]])"
+     sets_lemmas nil)
+    (member const-decl "bool" sets nil)
+    (subset? const-decl "bool" sets nil)
+    (coherent? const-decl "bool" googleDocs nil))
+   nil))
+ (setOwner_TCC1 0
+  (setOwner_TCC1-1 nil 3567836581 ("" (subtype-tcc) nil nil)
+   ((coherent? const-decl "bool" googleDocs nil)) nil))
+ (setOwner_TCC2 0
+  (setOwner_TCC2-1 nil 3567836581 ("" (subtype-tcc) nil nil)
+   ((coherent? const-decl "bool" googleDocs nil)) nil))
+ (setNoAccess_TCC1 0
+  (setNoAccess_TCC1-1 nil 3567836581 ("" (subtype-tcc) nil nil)
+   ((coherent? const-decl "bool" googleDocs nil)) nil))
+ (setNoAccess_TCC2 0
+  (setNoAccess_TCC2-1 nil 3567836581 ("" (subtype-tcc) nil nil)
+   ((coherent? const-decl "bool" googleDocs nil)) nil)))
+

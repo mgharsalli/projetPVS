@@ -1,0 +1,20 @@
+cartesian_product[T, U: TYPE]: THEORY
+
+  BEGIN
+
+    *(ts: [T -> bool], us: [U -> bool]): [T, U -> bool]
+     = (LAMBDA (t: T, u: U): ts(t) AND us(u))
+
+    emptyset_product: LEMMA
+      (FORALL (us: [U -> bool]): emptyset*us = emptyset)
+
+    add_product_union: LEMMA
+      (FORALL (t: T, ts: [T -> bool], us: [U -> bool]):
+        add(t, ts)*us = union(singleton(t)*us, ts*us))
+
+    IMPORTING finite_sets@finite_sets_inductions[T]
+
+    cartesian_product_finite: JUDGEMENT
+      *(ts: finite_set[T], us: finite_set[U]) HAS_TYPE finite_set[[T, U]]
+
+  END cartesian_product

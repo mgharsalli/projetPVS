@@ -1,0 +1,14 @@
+%%%
+%%% Google Drive Project, ENSEIRB-MATMECA
+%%% Team 5 - 2012/2013 : Fabien CHERET, Pauline GALVAO, Alexia MENAND, Camille MIZONY, Elian ORIOU
+%%% Project URL : http://code.google.com/p/pvs-google-documents/
+%%% ENSEIRB-MATMECA Advisor : Paul-Yves Gloess
+%%% 
+
+Object: DATATYPE
+  BEGIN
+
+    collection(url: nat, name: string): Collection?
+    document(url: nat, name: string): Document?
+   
+  END Object

@@ -1,0 +1,52 @@
+%%%
+%%% Google Drive Project, ENSEIRB-MATMECA
+%%% Team 5 - 2012/2013 : Fabien CHERET, Pauline GALVAO, Alexia MENAND, Camille MIZONY, Elian ORIOU
+%%% Project URL : http://code.google.com/p/pvs-google-documents/
+%%% ENSEIRB-MATMECA Advisor : Paul-Yves Gloess
+%%%
+
+googleDocsExamples : THEORY
+
+  BEGIN
+
+    %% =============================================================
+    %% Initialization of a set of users
+    %% =============================================================
+    User: TYPE
+      = [#   id: nat,
+           name: string #]
+
+    u1: User
+      = (#   id := 1,
+           name := "Alphonse" #)
+
+    u2: User
+      = (#   id := 2,
+           name := "Jeannette" #)
+
+    u3: User
+      =  (#  id := 3,
+           name := "Albert" #)
+
+    %% =============================================================
+    %% Initialization of the google database type describing the
+    %% state of the "Google World"
+    %% =============================================================
+    IMPORTING googleDocs[User]
+
+    sigma0: googleDatabase
+      = (#           `url := 1,
+                   `view? := LAMBDA(o: Object, u: User): FALSE,
+                   `edit? := LAMBDA(o: Object, u: User): FALSE,
+                `comment? := LAMBDA(d: (Document?), u: User): FALSE,
+                  `owner? := LAMBDA(o: Object, u: User): FALSE,
+              `belongsTo? := LAMBDA(o: Object, c: (Collection?)): FALSE
+        #)
+
+    sigma1: googleDatabase
+      = createDocument(u1)(sigma0)
+
+    sigma2: googleDatabase
+      = createCollection(u1, "MyDrive")(sigma1)
+
+  END googleDocsExamples

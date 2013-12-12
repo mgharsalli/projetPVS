@@ -1,0 +1,179 @@
+%%% ADT file generated from Object
+
+Object_adt: THEORY
+ BEGIN
+
+  Object: TYPE
+
+  Collection?, Document?: [Object -> boolean]
+
+  url: [Object -> nat]
+
+  name: [Object -> string]
+
+  collection: [[nat, string] -> (Collection?)]
+
+  document: [[nat, string] -> (Document?)]
+
+  Object_ord: [Object -> upto(1)]
+
+  Object_ord_defaxiom: AXIOM
+    (FORALL (url: nat, name: string):
+       Object_ord(collection(url, name)) = 0)
+     AND
+     (FORALL (url: nat, name: string): Object_ord(document(url, name)) = 1);
+
+  ord(x: Object): [Object -> upto(1)] =
+      CASES x
+        OF collection(collection1_var, collection2_var): 0,
+           document(document1_var, document2_var): 1
+        ENDCASES
+
+  Object_collection_extensionality: AXIOM
+    FORALL (Collection?_var: (Collection?),
+            Collection?_var2: (Collection?)):
+      url(Collection?_var) = url(Collection?_var2) AND
+       name(Collection?_var) = name(Collection?_var2)
+       IMPLIES Collection?_var = Collection?_var2;
+
+  Object_collection_eta: AXIOM
+    FORALL (Collection?_var: (Collection?)):
+      collection(url(Collection?_var), name(Collection?_var)) =
+       Collection?_var;
+
+  Object_document_extensionality: AXIOM
+    FORALL (Document?_var: (Document?), Document?_var2: (Document?)):
+      url(Document?_var) = url(Document?_var2) AND
+       name(Document?_var) = name(Document?_var2)
+       IMPLIES Document?_var = Document?_var2;
+
+  Object_document_eta: AXIOM
+    FORALL (Document?_var: (Document?)):
+      document(url(Document?_var), name(Document?_var)) = Document?_var;
+
+  Object_url_collection: AXIOM
+    FORALL (collection1_var: nat, collection2_var: string):
+      url(collection(collection1_var, collection2_var)) = collection1_var;
+
+  Object_name_collection: AXIOM
+    FORALL (collection1_var: nat, collection2_var: string):
+      name(collection(collection1_var, collection2_var)) = collection2_var;
+
+  Object_url_document: AXIOM
+    FORALL (document1_var: nat, document2_var: string):
+      url(document(document1_var, document2_var)) = document1_var;
+
+  Object_name_document: AXIOM
+    FORALL (document1_var: nat, document2_var: string):
+      name(document(document1_var, document2_var)) = document2_var;
+
+  Object_inclusive: AXIOM
+    FORALL (Object_var: Object):
+      Collection?(Object_var) OR Document?(Object_var);
+
+  Object_induction: AXIOM
+    FORALL (p: [Object -> boolean]):
+      ((FORALL (collection1_var: nat, collection2_var: string):
+          p(collection(collection1_var, collection2_var)))
+        AND
+        (FORALL (document1_var: nat, document2_var: string):
+           p(document(document1_var, document2_var))))
+       IMPLIES (FORALL (Object_var: Object): p(Object_var));
+
+  subterm(x: Object, y: Object):  boolean = x = y;
+
+  <<:  (strict_well_founded?[Object]) = LAMBDA (x, y: Object): FALSE;
+
+  Object_well_founded: AXIOM strict_well_founded?[Object](<<);
+
+  reduce_nat(Collection?_fun: [[nat, string] -> nat],
+             Document?_fun: [[nat, string] -> nat]):
+        [Object -> nat] =
+      LAMBDA (Object_adtvar: Object):
+        LET red: [Object -> nat] =
+              reduce_nat(Collection?_fun, Document?_fun)
+          IN
+          CASES Object_adtvar
+            OF collection(collection1_var, collection2_var):
+                 Collection?_fun(collection1_var, collection2_var),
+               document(document1_var, document2_var):
+                 Document?_fun(document1_var, document2_var)
+            ENDCASES;
+
+  REDUCE_nat(Collection?_fun: [[nat, string, Object] -> nat],
+             Document?_fun: [[nat, string, Object] -> nat]):
+        [Object -> nat] =
+      LAMBDA (Object_adtvar: Object):
+        LET red: [Object -> nat] =
+              REDUCE_nat(Collection?_fun, Document?_fun)
+          IN
+          CASES Object_adtvar
+            OF collection(collection1_var, collection2_var):
+                 Collection?_fun(collection1_var, collection2_var,
+                                 Object_adtvar),
+               document(document1_var, document2_var):
+                 Document?_fun(document1_var, document2_var, Object_adtvar)
+            ENDCASES;
+
+  reduce_ordinal(Collection?_fun: [[nat, string] -> ordinal],
+                 Document?_fun: [[nat, string] -> ordinal]):
+        [Object -> ordinal] =
+      LAMBDA (Object_adtvar: Object):
+        LET red: [Object -> ordinal] =
+              reduce_ordinal(Collection?_fun, Document?_fun)
+          IN
+          CASES Object_adtvar
+            OF collection(collection1_var, collection2_var):
+                 Collection?_fun(collection1_var, collection2_var),
+               document(document1_var, document2_var):
+                 Document?_fun(document1_var, document2_var)
+            ENDCASES;
+
+  REDUCE_ordinal(Collection?_fun: [[nat, string, Object] -> ordinal],
+                 Document?_fun: [[nat, string, Object] -> ordinal]):
+        [Object -> ordinal] =
+      LAMBDA (Object_adtvar: Object):
+        LET red: [Object -> ordinal] =
+              REDUCE_ordinal(Collection?_fun, Document?_fun)
+          IN
+          CASES Object_adtvar
+            OF collection(collection1_var, collection2_var):
+                 Collection?_fun(collection1_var, collection2_var,
+                                 Object_adtvar),
+               document(document1_var, document2_var):
+                 Document?_fun(document1_var, document2_var, Object_adtvar)
+            ENDCASES;
+ END Object_adt
+
+Object_adt_reduce[range: TYPE]: THEORY
+ BEGIN
+
+  IMPORTING Object_adt
+
+  reduce(Collection?_fun: [[nat, string] -> range],
+         Document?_fun: [[nat, string] -> range]):
+        [Object -> range] =
+      LAMBDA (Object_adtvar: Object):
+        LET red: [Object -> range] = reduce(Collection?_fun, Document?_fun)
+          IN
+          CASES Object_adtvar
+            OF collection(collection1_var, collection2_var):
+                 Collection?_fun(collection1_var, collection2_var),
+               document(document1_var, document2_var):
+                 Document?_fun(document1_var, document2_var)
+            ENDCASES;
+
+  REDUCE(Collection?_fun: [[nat, string, Object] -> range],
+         Document?_fun: [[nat, string, Object] -> range]):
+        [Object -> range] =
+      LAMBDA (Object_adtvar: Object):
+        LET red: [Object -> range] = REDUCE(Collection?_fun, Document?_fun)
+          IN
+          CASES Object_adtvar
+            OF collection(collection1_var, collection2_var):
+                 Collection?_fun(collection1_var, collection2_var,
+                                 Object_adtvar),
+               document(document1_var, document2_var):
+                 Document?_fun(document1_var, document2_var, Object_adtvar)
+            ENDCASES;
+ END Object_adt_reduce

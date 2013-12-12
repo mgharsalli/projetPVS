@@ -1,0 +1,34 @@
+(googleDocsExamples
+ (sigma1_TCC1 0
+  (sigma1_TCC1-1 nil 3567924393 ("" (subtype-tcc) nil nil)
+   ((sigma0 const-decl "googleDatabase" googleDocsExamples nil)
+    (member const-decl "bool" sets nil)
+    (subset? const-decl "bool" sets nil)
+    (User type-eq-decl nil googleDocsExamples nil)
+    (string type-eq-decl nil strings nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (coherent? const-decl "bool" googleDocs nil)
+    (subset_is_partial_order name-judgement "(partial_order?[set[T]])"
+     sets_lemmas nil))
+   nil))
+ (sigma2_TCC1 0
+  (sigma2_TCC1-1 nil 3567924393 ("" (subtype-tcc) nil nil)
+   ((list2finseq const-decl "finseq[T]" list2finseq nil)
+    (u1 const-decl "User" googleDocsExamples nil)
+    (sigma0 const-decl "googleDatabase" googleDocsExamples nil)
+    (User type-eq-decl nil googleDocsExamples nil)
+    (string type-eq-decl nil strings nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (createDocument const-decl "(coherent?)" googleDocs nil)
+    (sigma1 const-decl "googleDatabase" googleDocsExamples nil)
+    (member const-decl "bool" sets nil)
+    (subset? const-decl "bool" sets nil)
+    (coherent? const-decl "bool" googleDocs nil)
+    (posint_plus_nnint_is_posint application-judgement "posint"
+     integers nil)
+    (odd_plus_odd_is_even application-judgement "even_int" integers
+     nil)
+    (subset_is_partial_order name-judgement "(partial_order?[set[T]])"
+     sets_lemmas nil))
+   nil)))
+
